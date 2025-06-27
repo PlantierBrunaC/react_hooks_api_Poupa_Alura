@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Section,
   Container,
@@ -13,15 +13,40 @@ import Botao from "../../componentes/Botao/index.js";
 import CampoTexto from "../../componentes/CampoTexto/index.js";
 import Fieldset from "../../componentes/Fieldset/index.js";
 import Label from "../../componentes/Label/index.js";
+import { IUsuario } from "../../types/index.js";
+import { criarUsuario } from "../../api/index.js";
+import { useAppContext } from "../../context/AppContext.js";
 
 const Cadastro = () => {
-  const [nome, setNome] = useState("");
-  const [renda, setRenda] = useState("");
+      const { criaUsuario } = useAppContext();
+  // ESTADOS SEPERADOS, FOI ALTERADO PARA UM UNICO ESTADO
+  // const [nome, setNome] = useState("");
+  // const [renda, setRenda] = useState("");
+  const [form, setform] = useState<Omit<IUsuario, "id">> ({
+    nome:"",
+    renda: 0, 
+  }); 
+
+  const aoDigitarNoCampoTexto = (campo: "nome" | "renda", valor: string) =>{
+    setform ((prev) =>({...prev, [campo]: valor}));
+  };
 
   const navigate = useNavigate();
 
-  const aoSubmeterFormulario = (evento: React.FormEvent) => {
+  const aoSubmeterFormulario = async (evento: React.FormEvent) => {
     evento.preventDefault();
+
+    criarUsuario(form);
+
+    // REMOVIDO POR CONTEXTO DO APP
+    // try{
+    //   const novoUsuario = await criarUsuario (form);
+    //   console.log(novoUsuario);
+
+    // }catch(err){
+    //   console.log(err)
+
+    // }
     navigate("/home");
   };
 
@@ -41,8 +66,8 @@ const Cadastro = () => {
               <CampoTexto
                 type="text"
                 name="nome"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
+                value={form.nome}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => aoDigitarNoCampoTexto("nome", e.target.value)}
               />
             </Fieldset>
             <Fieldset>
@@ -50,8 +75,8 @@ const Cadastro = () => {
               <CampoTexto
                 type="text"
                 name="renda"
-                value={renda}
-                onChange={(e) => setRenda(e.target.value)}
+                value={form.renda}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => aoDigitarNoCampoTexto("renda", e.target.value)}
               />
             </Fieldset>
           </Form>
