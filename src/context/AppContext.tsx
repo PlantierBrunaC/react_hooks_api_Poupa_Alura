@@ -1,47 +1,65 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { IUsuario } from '../types';
-import { criarUsuario, obterUsuario } from '../api';
+import { ITransacoes, IUsuario } from '../types';
+import { criarTransacoes, criarUsuario, obterTransacoes, obterUsuario } from '../api';
 
 interface AppContextType {
     usuario: IUsuario | null;
-    criaUsuario: (usuario: Omit<IUsuario, "id">) => Promise<void>;
+    criaUsuario: (usuario: Omit<IUsuario, "id" | "orcamentoDiario">) => Promise<void>;
+    transacoes: ITransacoes[];
+    criaTransacao: (novaTransacao: Omit<ITransacoes, "id">) => Promise<void>
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [usuario, setUsuario] = useState<IUsuario | null>(null);
+    const [transacoes, setTransacoes] = useState<ITransacoes[]>([])
 
-    const carregaDadosUsuario = async () =>{
-        try{
+    const carregaDadosUsuario = async () => {
+        try {
             const usuarios = await obterUsuario();
-            if(usuarios.length > 0 ){
-              setUsuario(usuarios[0]);  
+            const transacoes = await obterTransacoes();
+            if (usuarios.length > 0) {
+                setUsuario(usuarios[0]);
+                setTransacoes(transacoes);
             }
 
-        }catch(err){
+        } catch (err) {
             console.log(err);
 
         }
     };
 
     useEffect(() => {
-        carregaDadosUsuario(); 
+        carregaDadosUsuario();
     });
 
-    const criaUsuario = async (usuario: Omit<IUsuario, "id">) =>{
-try{
-    const novoUsuario = await criarUsuario(usuario)
-    setUsuario(novoUsuario); 
+    const criaUsuario = async (usuario: Omit<IUsuario, "id" | "orcamentoDiario">) => {
+        try {
+            const novoUsuario = await criarUsuario(usuario)
+            setUsuario(novoUsuario);
 
-}catch(err){
+        } catch (err) {
             console.log(err);
 
         }
     }
 
 
-    return <AppContext.Provider value={{usuario, criaUsuario}}>
+    const criaTransacao = async (novaTransacao: Omit<ITransacoes, "id">) => {
+        try {
+            const transacaoCriada = await criarTransacoes(novaTransacao)
+            setTransacoes((prev) => [...prev, transacaoCriada]);
+
+        } catch (err) {
+            console.error(err);
+
+        }
+    }
+
+
+
+    return <AppContext.Provider value={{ usuario, criaUsuario, transacoes, criaTransacao }}>
         {children}
     </AppContext.Provider>
 
@@ -52,9 +70,9 @@ export default AppProvider
 
 export const useAppContext = () => {
     const context = useContext(AppContext)
-    if(!context){
+    if (!context) {
         throw new Error("useAppContext deve ser utilizado dentro de um Provider ")
     }
 
-    return context; 
+    return context;
 }

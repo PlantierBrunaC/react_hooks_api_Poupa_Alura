@@ -22,9 +22,10 @@ const Cadastro = () => {
   // ESTADOS SEPERADOS, FOI ALTERADO PARA UM UNICO ESTADO
   // const [nome, setNome] = useState("");
   // const [renda, setRenda] = useState("");
-  const [form, setform] = useState<Omit<IUsuario, "id">> ({
+  const [form, setform] = useState<Omit<IUsuario, "id"| "orcamentoDiario">> ({
     nome:"",
     renda: 0, 
+
   }); 
 
   const aoDigitarNoCampoTexto = (campo: "nome" | "renda", valor: string) =>{

@@ -1,15 +1,8 @@
 {
   "usuarios": [
-    {
-      "id": "81cc",
-      "nome": "Bruna",
-      "renda": "5"
-    },
-    {
-      "id": "e289",
-      "nome": "Rafael",
-      "renda": "100"
-    }
+
   ],
-  "transacoes": []
+  "transacoes": [
+   
+  ]
 }
