@@ -1,8 +1,11 @@
 {
   "usuarios": [
-
+    {
+      "id": "aa07",
+      "nome": "Etevaldo",
+      "renda": "2500",
+      "orcamentoDiario": 83.33333333333333
+    }
   ],
-  "transacoes": [
-   
-  ]
+  "transacoes": []
 }

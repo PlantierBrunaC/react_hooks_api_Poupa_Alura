@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ITransacoes, IUsuario } from "../types";
-import OrcamentoDiario from "../componentes/OrcamentoDiario";
+import orcamentoDiario from "../componentes/OrcamentoDiario";
 
 const api = axios.create({
     baseURL: "http://localhost:5000",
@@ -15,7 +15,7 @@ export const obterUsuario = async (): Promise<IUsuario[]> => {
 
 export const criarUsuario = async(usuario: Omit<IUsuario, "id" | "orcamentoDiario">): Promise<IUsuario> =>{
     const usuarioComOrcamentoDiario = {
-        ...usuario, OrcamentoDiario: usuario.renda / 30,
+        ...usuario, orcamentoDiario: usuario.renda / 30,
     }
     // orçamento diario Dividido por 30 pelos dias do mês 
     
@@ -24,7 +24,7 @@ export const criarUsuario = async(usuario: Omit<IUsuario, "id" | "orcamentoDiari
     return data; 
 }
 
-const atualizarUsuario = async (id: string, dados: IUsuario) => {
+export const atualizarUsuario = async (id: string, dados: IUsuario): Promise<IUsuario> => {
  const {data} = await api.patch(`/usuaios/${id}`, dados); 
  return data; 
 }
