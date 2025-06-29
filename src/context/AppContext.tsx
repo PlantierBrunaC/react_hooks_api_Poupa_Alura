@@ -6,7 +6,7 @@ interface AppContextType {
     usuario: IUsuario | null;
     criaUsuario: (usuario: Omit<IUsuario, "id" | "orcamentoDiario">) => Promise<void>;
     transacoes: ITransacoes[];
-    criaTransacao: (novaTransacao: Omit<ITransacoes, "id">) => Promise<void>
+    criaTransacao: (novaTransacao: Omit<ITransacoes, "id" | "userID">) => Promise<void>
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -46,10 +46,19 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
 
-    const criaTransacao = async (novaTransacao: Omit<ITransacoes, "id">) => {
+    const criaTransacao = async (novaTransacao: Omit<ITransacoes, "id" | "userID">) => {
         try {
-            const transacaoCriada = await criarTransacoes(novaTransacao)
-            setTransacoes((prev) => [...prev, transacaoCriada]);
+            if (!usuario){
+                throw new Error ("Não é possível criar transações sem usuário associado");
+            }
+
+            const {transacao, novoOrcamentoDiario} = await criarTransacoes(novaTransacao, usuario);
+            setTransacoes((prev) => [...prev, transacao]);
+            setUsuario((prev)=> prev ? {...prev, orcamentoDiario: novoOrcamentoDiario} : null)
+
+            // Refatoração para o calculo das transacoes, subtraindo em despesa e somando com receita 
+            // const transacaoCriada = await criarTransacoes(novaTransacao, usuario)
+            // setTransacoes((prev) => [...prev, transacaoCriada]);
 
         } catch (err) {
             console.error(err);

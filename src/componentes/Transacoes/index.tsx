@@ -73,7 +73,7 @@ const Transacoes = () => {
   const modalRef = useRef<ModalHandle>(null);
   const {transacoes, criaTransacao} = useAppContext();
 
-  const [novaTransacao, setNovaTransacao] = useState<Omit<ITransacoes, "id">>({
+  const [novaTransacao, setNovaTransacao] = useState<Omit<ITransacoes, "id" | "userID">>({
     nome: "",
     valor: 0,
     tipo: "receita",
@@ -152,7 +152,7 @@ try {
                   //   ...novaTransacao,
                   //   valor: parseFloat(e.target.value),
                   // })
-                  aoMudar("valor", e.target.value)
+                  aoMudar("valor", parseFloat(e.target.value))
                 }
               />
             </Fieldset>

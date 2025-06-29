@@ -1,11 +1,27 @@
 {
   "usuarios": [
     {
-      "id": "aa07",
-      "nome": "Etevaldo",
-      "renda": "2500",
-      "orcamentoDiario": 83.33333333333333
+      "id": "80ce",
+      "nome": "Bruna Castanho",
+      "renda": "6000",
+      "orcamentoDiario": 200
+    },
+    {
+      "id": "ce5a",
+      "nome": "Bruna Castanho",
+      "renda": "8000",
+      "orcamentoDiario": 266.6666666666667
     }
   ],
-  "transacoes": []
+  "transacoes": [
+    {
+      "id": "90f2",
+      "nome": "Livro",
+      "valor": 80,
+      "tipo": "despesa",
+      "categoria": "Entretenimento",
+      "data": "2025-06-29",
+      "userID": "80ce"
+    }
+  ]
 }
